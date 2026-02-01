@@ -1,0 +1,83 @@
+# ===============================
+# Compilación C++
+# ===============================
+*.o
+*.obj
+*.exe
+*.out
+*.app
+*.dll
+*.so
+*.a
+*.lib
+
+# ===============================
+# Carpetas de build
+# ===============================
+build/
+bin/
+obj/
+out/
+cmake-build-*/
+
+# ===============================
+# CMake
+# ===============================
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# ===============================
+# Visual Studio
+# ===============================
+.vs/
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+Debug/
+Release/
+x64/
+Win32/
+
+# ===============================
+# VS Code
+# ===============================
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+# ===============================
+# CLion / JetBrains
+# ===============================
+.idea/
+
+# ===============================
+# Archivos temporales
+# ===============================
+*.log
+*.tmp
+*.temp
+*.swp
+*.bak
+
+# ===============================
+# Sistema Operativo
+# ===============================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===============================
+# Coverage / profiling
+# ===============================
+*.gcda
+*.gcno
+*.gcov
+
+# ===============================
+# Otros
+# ===============================
+.cache/
