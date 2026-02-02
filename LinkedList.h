@@ -1,7 +1,13 @@
 #pragma once
 #ifndef LINKEDLIST_H
 #define LINKEDLIST_H
+
 #include <stdexcept>
+#if __cplusplus >= 201103L
+#define MY_NULLPTR nullptr
+#else
+#define MY_NULLPTR NULL
+#endif
 
 template <typename T>
 struct Node {
@@ -19,12 +25,12 @@ private:
 
 public:
     LinkedList()
-        : cursor(nullptr), head(nullptr), tail(nullptr), length(0)
+        : cursor(MY_NULLPTR), head(MY_NULLPTR), tail(MY_NULLPTR), length(0)
     {
     }
     ~LinkedList() {
         Node<T>* cursor = head;
-        while (cursor != nullptr)
+        while (cursor != MY_NULLPTR)
         {
             Node<T>* next = cursor->next;
             delete cursor;
@@ -36,8 +42,8 @@ public:
         Node<T>* newNode = new Node<T>;
         if (length == 0) {
             newNode->data = value;
-            newNode->next = nullptr;
-            newNode->prev = nullptr;
+            newNode->next = MY_NULLPTR;
+            newNode->prev = MY_NULLPTR;
             
             head = newNode;
             tail = newNode;
@@ -46,7 +52,7 @@ public:
             length++;
         } else {
             newNode->data = value;
-            newNode->next = nullptr;
+            newNode->next = MY_NULLPTR;
             newNode->prev = tail;
 
             tail->next = newNode;
@@ -68,7 +74,7 @@ public:
         return cursor->data;
     };
     void remove() {
-        if (cursor == nullptr) {
+        if (cursor == MY_NULLPTR) {
             throw std::out_of_range("List is empty");
         }
         Node<T>* temp = cursor;
@@ -78,57 +84,57 @@ public:
         if (cursor == tail) {
             tail = tail->prev;
         }
-        if (cursor->prev != nullptr) {
+        if (cursor->prev != MY_NULLPTR) {
             cursor->prev->next = cursor->next;
         }
-        if (cursor->next != nullptr) {
+        if (cursor->next != MY_NULLPTR) {
             cursor->next->prev = cursor->prev;
         }
-        if (cursor->next != nullptr) {
+        if (cursor->next != MY_NULLPTR) {
             cursor = cursor->next;
         }
-        else if (cursor->prev != nullptr) {
+        else if (cursor->prev != MY_NULLPTR) {
             cursor = cursor->prev;
         }
         else {
-            cursor = nullptr;
+            cursor = MY_NULLPTR;
         }
         delete temp;
 
         length--;
     };
     void current() {
-        if (cursor == nullptr) {
+        if (cursor == MY_NULLPTR) {
             throw std::out_of_range("List is empty");
         }
         return cursor->data;
     };
     void next() {
-        if (cursor == nullptr) {
+        if (cursor == MY_NULLPTR) {
             throw std::out_of_range("List is empty");
         }
-        if (cursor->next == nullptr) {
+        if (cursor->next == MY_NULLPTR) {
             throw std::out_of_range("Next is null");
         }
         cursor = cursor->next;
     };
     void prior() {
-        if (cursor == nullptr) {
+        if (cursor == MY_NULLPTR) {
             throw std::out_of_range("List is empty");
         }
-        if (cursor->prev == nullptr) {
+        if (cursor->prev == MY_NULLPTR) {
             throw std::out_of_range("Prev is null");
         }
         cursor = cursor->prev;
     };
     T first() {
-        if (head == nullptr) {
+        if (head == MY_NULLPTR) {
             throw std::out_of_range("List is empty");
         }
         return head->data;
     };
     T last() {
-        if (tail == nullptr) {
+        if (tail == MY_NULLPTR) {
             throw std::out_of_range("List is empty");
         }
         return tail->data;

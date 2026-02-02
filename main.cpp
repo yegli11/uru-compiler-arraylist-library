@@ -25,7 +25,7 @@ int main() {
         list.next(); // Exception: Next is null
     }
     catch (const std::out_of_range& e) {
-        std::cout << "Excepción: " << e.what() << "\n";
+        std::cout << "Excepciï¿½n: " << e.what() << "\n";
     }
 
     // Mover current con prior()
@@ -37,33 +37,33 @@ int main() {
         list.prior(); // Exception: Prev is null
     }
     catch (const std::out_of_range& e) {
-        std::cout << "Excepción: " << e.what() << "\n";
+        std::cout << "Excepciï¿½n: " << e.what() << "\n";
     }
 
     // Eliminar elementos
     std::cout << "\nEliminando elementos:\n";
     list.next(); // current = 20
     list.remove(); // elimina 20
-    std::cout << "El tamaño después de eliminar 20: " << list.size() << "\n";
-    std::cout << "Current ahora apunta a: " << list.get(1) << "\n"; // debería ser 30
+    std::cout << "El tamaï¿½o despuï¿½s de eliminar 20: " << list.size() << "\n";
+    std::cout << "Current ahora apunta a: " << list.get(1) << "\n"; // deberï¿½a ser 30
 
     // Eliminar head
     list.prior(); // current = 10
     list.remove(); // elimina 10
-    std::cout << "El tamaño después de eliminar head: " << list.size() << "\n";
-    std::cout << "First ahora: " << list.first() << "\n"; // debería ser 30
+    std::cout << "El tamaï¿½o despuï¿½s de eliminar head: " << list.size() << "\n";
+    std::cout << "First ahora: " << list.first() << "\n"; // deberï¿½a ser 30
 
     // Eliminar tail
     list.next(); // current = 40
     list.remove(); // elimina 40
-    std::cout << "El tamaño después de eliminar tail: " << list.size() << "\n";
-    std::cout << "Last ahora: " << list.last() << "\n"; // debería ser 30
+    std::cout << "El tamaï¿½o despuï¿½s de eliminar tail: " << list.size() << "\n";
+    std::cout << "Last ahora: " << list.last() << "\n"; // deberï¿½a ser 30
 
-    // Eliminar el último nodo
+    // Eliminar el ï¿½ltimo nodo
     list.remove(); // elimina 30
-    std::cout << "Tamaño final: " << list.size() << "\n"; // 0
+    std::cout << "Tamaï¿½o final: " << list.size() << "\n"; // 0
 
-    /*ArrayList<int> lista;
+    ArrayList<int> lista;
 
     lista.add(10);
     lista.add(20);
@@ -87,7 +87,7 @@ int main() {
 
     std::cout << "Ultimo Indice:" << std::endl;
     std::cout << lista.size()-1 << std::endl;
-    std::cout << lista.last() << std::endl;*/
+    std::cout << lista.last() << std::endl;
 
     return 0;
 }
