@@ -32,14 +32,21 @@ Makefile
 # Visual Studio
 # ===============================
 .vs/
-*.sln
-*.vcxproj
-*.vcxproj.filters
-*.vcxproj.user
+*.vcxproj.user  # Solo este archivo (configuración local del usuario)
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
 Debug/
 Release/
 x64/
 Win32/
+ipch/
+*.aps
+*.ncb
+*.opensdf
+*.sdf
+*.cachefile
 
 # ===============================
 # VS Code
