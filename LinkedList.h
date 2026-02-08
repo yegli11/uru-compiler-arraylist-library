@@ -24,6 +24,21 @@ private:
     int length;
 
 public:
+    // Elimina y devuelve el primer elemento
+    T popFront() {
+        if (head == MY_NULLPTR) {
+            throw std::out_of_range("List is empty");
+        }
+        Node<T>* originalCursor = cursor;
+        cursor = head;
+        T value = cursor->data;
+        remove();
+        // Restaurar cursor si no fue eliminado
+        if (cursor != originalCursor && originalCursor != MY_NULLPTR) {
+            cursor = originalCursor;
+        }
+        return value;
+    }
     LinkedList()
         : cursor(MY_NULLPTR), head(MY_NULLPTR), tail(MY_NULLPTR), length(0)
     {
