@@ -5,14 +5,14 @@
 
 template <typename T>
 struct Node {
-    T data;
-    Node<T>* next;
+    T data; 
+	Node<T>* next; 
     Node<T>* prev;
 };
 template <typename T>
 class LinkedList {
 private:
-    Node<T>* cursor;
+	Node<T>* cursor; //direccion de memoria del valor actual
     Node<T>* head;
     Node<T>* tail;
     int length;
@@ -22,7 +22,7 @@ public:
         : cursor(nullptr), head(nullptr), tail(nullptr), length(0)
     {
     }
-    ~LinkedList() {
+    ~LinkedList() { 
         Node<T>* cursor = head;
         while (cursor != nullptr)
         {
@@ -71,7 +71,7 @@ public:
         if (cursor == nullptr) {
             throw std::out_of_range("List is empty");
         }
-        Node<T>* temp = cursor;
+        Node<T>* temp = cursor; 
         if (cursor == head) {
             head = head->next;
         }
@@ -97,7 +97,7 @@ public:
 
         length--;
     };
-    void current() {
+    T current() {
         if (cursor == nullptr) {
             throw std::out_of_range("List is empty");
         }
@@ -136,6 +136,9 @@ public:
     int size() {
         return length;
     };
+
+	// Métodos adicionales si es necesario
+	//anadir el metodo peek que devuelve el valor siguiente del cursor sin moverlo
 };
 
 #endif
