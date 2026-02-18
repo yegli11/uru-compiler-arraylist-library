@@ -118,6 +118,9 @@ public:
 
         length--;
     };
+    void resetCursor() {
+        cursor = head;
+    }
     void current() {
         if (cursor == MY_NULLPTR) {
             throw std::out_of_range("List is empty");
