@@ -18,6 +18,19 @@ public:
                   << op.getLexeme() << "\n";
         if (left) left->print(indent + 4);
     }
+
+    double evaluate(const Environment& env) override {
+        double lval = left->evaluate(env);
+        double rval = right->evaluate(env);
+        switch (op.getType()) {
+            case TOKEN_PLUS: return lval + rval;
+            case TOKEN_MINUS: return lval - rval;
+            case TOKEN_MULTIPLY: return lval * rval;
+            case TOKEN_DIVIDE: return lval / rval;
+            default:
+                throw std::runtime_error("Operador no soportado en evaluate: " + op.getLexeme());
+        }
+    }
 };
 
 #endif

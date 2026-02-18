@@ -9,6 +9,8 @@
 #include "LeafNode.h"
 #include "LinkedList.h"
 #include "Token.h"
+#include "Environment.h"
+#include "ProgramParser.h"
 
 int main() {
 
@@ -39,17 +41,20 @@ int main() {
 // // 9️⃣ Solo un número
 // std::string code = "42";
 
-// 🔟 Expresión compleja
-std::string code = "(a + b) * (c - d) / 2";
-
+// Expresión con asignaciones
+std::string code = "a = 5; b = 3; c = 10; d = 1; (a + b) * (c - d) / d";
     try {
         Lexer lexer(code);
-        ExpressionParser parser(lexer);
-
-        ASTNode* tree = parser.parseExpression();
+        Environment env;
+        ProgramParser progParser(lexer);
+        ASTNode* tree = progParser.parse(env);
 
         std::cout << "===== AST GENERADO =====\n";
         tree->print();
+
+        double result = tree->evaluate(env);
+        std::cout << "\n===== RESULTADO =====\n";
+        std::cout << result << std::endl;
     }
     catch (const std::exception& e) {
         std::cout << e.what() << std::endl;
