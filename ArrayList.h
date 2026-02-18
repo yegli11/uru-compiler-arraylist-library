@@ -3,6 +3,11 @@
 #define ARRAYLIST_H
 
 #include <stdexcept>
+#if __cplusplus >= 201103L
+#define MY_NULLPTR nullptr
+#else
+#define MY_NULLPTR NULL
+#endif
 
 template <typename T>
 class ArrayList {
@@ -14,7 +19,7 @@ private:
 
 public:
     ArrayList()
-        : items(nullptr),
+        : items(MY_NULLPTR),
         length(0),
         capacity(8),
         cursor(0)
