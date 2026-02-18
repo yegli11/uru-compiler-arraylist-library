@@ -137,8 +137,15 @@ public:
         return length;
     };
 
-	// Métodos adicionales si es necesario
-	//anadir el metodo peek que devuelve el valor siguiente del cursor sin moverlo
+    T peek() {
+        if (cursor == nullptr) {
+            throw std::out_of_range("List is empty");
+        }
+        if (cursor->next == nullptr) {
+            throw std::out_of_range("Next is null");
+        }
+        return cursor->next->data;
+	};
 };
 
 #endif
