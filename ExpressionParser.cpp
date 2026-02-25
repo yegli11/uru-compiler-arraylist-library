@@ -42,7 +42,7 @@ int main() {
 // std::string code = "42";
 
 // Expresión con asignaciones
-std::string code = "a = 5; b = 3; c = 10; d = 1; (a + b) * (c - d) / d";
+std::string code = "int a = 5; int b = 3; int c = 10; int d = 1; (a + b) * (c - d) / d";
     try {
         Lexer lexer(code);
         Environment env;

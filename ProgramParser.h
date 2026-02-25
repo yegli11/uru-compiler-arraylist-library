@@ -14,13 +14,43 @@ public:
 
     ASTNode* parse(Environment& env) {
         ASTNode* tree = nullptr;
+
         while (true) {
             Token t = lexer.peekNextToken();
-            if (t.getType() == TOKEN_IDENTIFIER) {
+
+            if (t.getType() == TOKEN_INT || t.getType() == TOKEN_FLOAT) {
+                lexer.getNextToken(); 
+
                 Token id = lexer.getNextToken();
+                if (id.getType() != TOKEN_IDENTIFIER)
+                    throw std::runtime_error("Se esperaba identificador después del tipo");
+
+                Token assign = lexer.getNextToken();
+                if (assign.getType() != TOKEN_ASSIGN)
+                    throw std::runtime_error("Se esperaba '=' en declaración");
+
+                Token value = lexer.getNextToken();
+                double val = 0;
+                if (value.getType() == TOKEN_INTEGER || value.getType() == TOKEN_FLOAT_NUM) {
+                    val = std::stod(value.getLexeme());
+                } else {
+                    throw std::runtime_error("Valor inválido en declaración: " + value.getLexeme());
+                }
+
+                env.set(id.getLexeme(), val);
+
+                Token semi = lexer.getNextToken();
+                if (semi.getType() != TOKEN_SEMICOLON)
+                    throw std::runtime_error("Se esperaba ';' después de declaración");
+            }
+      
+            else if (t.getType() == TOKEN_IDENTIFIER) {
+                Token id = lexer.getNextToken();
+
                 Token assign = lexer.getNextToken();
                 if (assign.getType() != TOKEN_ASSIGN)
                     throw std::runtime_error("Se esperaba '=' en asignación");
+
                 Token value = lexer.getNextToken();
                 double val = 0;
                 if (value.getType() == TOKEN_INTEGER || value.getType() == TOKEN_FLOAT_NUM) {
@@ -28,18 +58,24 @@ public:
                 } else {
                     throw std::runtime_error("Valor inválido en asignación: " + value.getLexeme());
                 }
+
                 env.set(id.getLexeme(), val);
+
                 Token semi = lexer.getNextToken();
                 if (semi.getType() != TOKEN_SEMICOLON)
                     throw std::runtime_error("Se esperaba ';' después de asignación");
-            } else {
+            }
+                    
+            else {
                 ExpressionParser exprParser(lexer);
                 tree = exprParser.parseExpression();
                 break;
             }
         }
+
         return tree;
     }
+
 private:
     Lexer& lexer;
 };
