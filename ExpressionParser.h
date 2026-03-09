@@ -15,7 +15,7 @@ private:
     void advance() {
         currentToken = lexer.getNextToken();
     }
-
+    //semantico
     void error(const std::string& message) {
         throw std::runtime_error(
             "Error sintactico en linea " +

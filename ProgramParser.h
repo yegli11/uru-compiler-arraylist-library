@@ -6,7 +6,9 @@
 #include "Environment.h"
 #include "ASTNode.h"
 #include "Token.h"
+#include "ManualLRParser.h"
 #include <stdexcept>
+#include <vector>
 
 class ProgramParser {
 public:
@@ -78,6 +80,33 @@ public:
 
 private:
     Lexer& lexer;
+};
+
+// Adaptador para usar el analizador sintactico ascendente manual.
+class ManualProgramParser {
+public:
+    explicit ManualProgramParser(Lexer& lexer)
+        : lexer(lexer) {}
+
+    ProgramNode* parse() {
+        LinkedList<::Token>& list = lexer.tokenize();
+        manual_lr::Token* input = manual_lr::buildTokenStream(list);
+
+        manual_lr::ManualLRParser parser(input);
+        ProgramNode* program = parser.parseProgram();
+
+        errors = parser.getErrors();
+        manual_lr::freeTokenStream(input);
+        return program;
+    }
+
+    const std::vector<std::string>& getErrors() const {
+        return errors;
+    }
+
+private:
+    Lexer& lexer;
+    std::vector<std::string> errors;
 };
 
 #endif
