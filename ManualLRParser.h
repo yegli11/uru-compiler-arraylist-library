@@ -280,6 +280,8 @@ private:
 
     // Bloque -> LBRACE ListaSentencias RBRACE
     BlockNode* parseBlockLR() {
+        size_t symbolBaseSize = symbolStack.size();
+        size_t stateBaseSize = stateStack.size();
         std::stack<int> localState;
         localState.push(10);
 
@@ -332,7 +334,7 @@ private:
                 case 12:
                     // Reduce Bloque completado.
                     // Limpia los terminales '{' y '}' que entraron por shift local.
-                    pruneTerminalsFromShift();
+                    pruneTerminalsFromShift(symbolBaseSize, stateBaseSize);
                     localState.pop();
                     localState.pop();
                     localState.pop();
@@ -366,6 +368,9 @@ private:
     }
 
     AssignNode* parseAssignmentStatement() {
+        size_t symbolBaseSize = symbolStack.size();
+        size_t stateBaseSize = stateStack.size();
+
         // Sentencia -> Asignacion ;
         if (lookaheadType() != TOKEN_IDENTIFIER) {
             reportError("Se esperaba identificador al inicio de asignacion");
@@ -388,11 +393,14 @@ private:
         }
         shift(stateStack.top());
 
-        pruneTerminalsFromShift();
+        pruneTerminalsFromShift(symbolBaseSize, stateBaseSize);
         return new AssignNode(id, expression);
     }
 
     WhileNode* parseWhileStatement() {
+        size_t symbolBaseSize = symbolStack.size();
+        size_t stateBaseSize = stateStack.size();
+
         shift(stateStack.top());
 
         std::string condition = parseParenthesizedExpression();
@@ -405,11 +413,14 @@ private:
             return nullptr;
         }
 
-        pruneTerminalsFromShift();
+        pruneTerminalsFromShift(symbolBaseSize, stateBaseSize);
         return new WhileNode(condition, body);
     }
 
     ForNode* parseForStatement() {
+        size_t symbolBaseSize = symbolStack.size();
+        size_t stateBaseSize = stateStack.size();
+
         shift(stateStack.top());
 
         if (lookaheadType() != TOKEN_LPAREN) {
@@ -444,11 +455,14 @@ private:
             return nullptr;
         }
 
-        pruneTerminalsFromShift();
+        pruneTerminalsFromShift(symbolBaseSize, stateBaseSize);
         return new ForNode(init, cond, update, body);
     }
 
     DoWhileNode* parseDoWhileStatement() {
+        size_t symbolBaseSize = symbolStack.size();
+        size_t stateBaseSize = stateStack.size();
+
         // Soporta TOKEN_IDENTIFIER con lexema "do" si el lexer aun no tiene TOKEN_DO.
         shift(stateStack.top());
 
@@ -473,11 +487,14 @@ private:
         }
         shift(stateStack.top());
 
-        pruneTerminalsFromShift();
+        pruneTerminalsFromShift(symbolBaseSize, stateBaseSize);
         return new DoWhileNode(body, cond);
     }
 
     IfNode* parseIfStatement() {
+        size_t symbolBaseSize = symbolStack.size();
+        size_t stateBaseSize = stateStack.size();
+
         shift(stateStack.top());
 
         std::string cond = parseParenthesizedExpression();
@@ -517,7 +534,7 @@ private:
             break;
         }
 
-        pruneTerminalsFromShift();
+        pruneTerminalsFromShift(symbolBaseSize, stateBaseSize);
         return ifNode;
     }
 
@@ -569,15 +586,15 @@ private:
     }
 
     // Elimina terminales que solo se apilaron por las acciones shift internas.
-    void pruneTerminalsFromShift() {
-        while (!symbolStack.empty()) {
+    void pruneTerminalsFromShift(size_t symbolBaseSize = 0, size_t stateBaseSize = 1) {
+        while (symbolStack.size() > symbolBaseSize) {
             TerminalNode* terminal = dynamic_cast<TerminalNode*>(symbolStack.top());
             if (!terminal) {
                 break;
             }
             delete terminal;
             symbolStack.pop();
-            if (stateStack.size() > 1) {
+            if (stateStack.size() > stateBaseSize) {
                 stateStack.pop();
             } else {
                 break;
