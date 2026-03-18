@@ -5,7 +5,7 @@
 int main() {
     std::string code =
         "int main() {\n"
-        "  x = 1;\n"
+        "  int x = 1;\n"
         "  if (x > 0) {\n"
         "    y = x;\n"
         "  } else {\n"

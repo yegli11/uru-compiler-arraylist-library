@@ -51,6 +51,25 @@ public:
     }
 };
 
+
+class DeclarationNode : public StatementNode {
+public:
+    std::string type;
+    std::string identifier;
+    std::string initExpr; // vacío si no hay inicialización
+
+    DeclarationNode(const std::string& t, const std::string& id, const std::string& init = "")
+        : type(t), identifier(id), initExpr(init) {}
+
+    void print(int indent = 0) override {
+        std::cout << std::string(indent, ' ') << "Declaration " << type << " " << identifier;
+        if (!initExpr.empty()) {
+            std::cout << " = " << initExpr;
+        }
+        std::cout << "\n";
+    }
+};
+
 class BlockNode : public StatementNode {
 public:
     std::vector<ASTNode*> statements;

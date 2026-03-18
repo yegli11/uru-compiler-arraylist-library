@@ -351,6 +351,7 @@ private:
         return nullptr;
     }
 
+
     ASTNode* parseStatementLR() {
         switch (lookaheadType()) {
             case TOKEN_IF:
@@ -359,12 +360,51 @@ private:
                 return parseWhileStatement();
             case TOKEN_FOR:
                 return parseForStatement();
+            case TOKEN_INT:
+            case TOKEN_FLOAT:
+            case TOKEN_CHAR:
+            case TOKEN_VOID:
+                return parseDeclarationStatement();
             case TOKEN_IDENTIFIER:
                 return parseAssignmentStatement();
             default:
                 reportError("Sentencia no reconocida con token: " + lookaheadLexeme());
                 return nullptr;
         }
+    }
+
+    DeclarationNode* parseDeclarationStatement() {
+        size_t symbolBaseSize = symbolStack.size();
+        size_t stateBaseSize = stateStack.size();
+
+        // Tipo
+        int typeToken = lookaheadType();
+        std::string typeStr = lookaheadLexeme();
+        shift(stateStack.top());
+
+        // Identificador
+        if (lookaheadType() != TOKEN_IDENTIFIER) {
+            reportError("Se esperaba identificador en declaración de variable");
+            return nullptr;
+        }
+        std::string id = lookaheadLexeme();
+        shift(stateStack.top());
+
+        std::string initExpr;
+        // Inicialización opcional
+        if (lookaheadType() == TOKEN_ASSIGN) {
+            shift(stateStack.top());
+            initExpr = collectUntilDelimiter(TOKEN_SEMICOLON);
+        }
+
+        if (lookaheadType() != TOKEN_SEMICOLON) {
+            reportError("Se esperaba ';' al final de declaración");
+            return nullptr;
+        }
+        shift(stateStack.top());
+
+        pruneTerminalsFromShift(symbolBaseSize, stateBaseSize);
+        return new DeclarationNode(typeStr, id, initExpr);
     }
 
     AssignNode* parseAssignmentStatement() {
