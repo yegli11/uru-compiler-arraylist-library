@@ -3,7 +3,6 @@
 
 #include "Lexer.h"
 #include "ExpressionParser.h"
-#include "Environment.h"
 #include "ASTNode.h"
 #include "Token.h"
 #include "ManualLRParser.h"
@@ -14,32 +13,40 @@ class ProgramParser {
 public:
     ProgramParser(Lexer& lexer) : lexer(lexer) {}
 
-    ASTNode* parse(Environment& env) {
+    ASTNode* parse() {
         ASTNode* tree = nullptr;
 
         while (true) {
             Token t = lexer.peekNextToken();
 
-            if (t.getType() == TOKEN_INT || t.getType() == TOKEN_FLOAT) {
+            if (t.getType() == TOKEN_EOF) {
+                break;
+            }
+
+            if (t.getType() == TOKEN_INT ||
+                t.getType() == TOKEN_FLOAT ||
+                t.getType() == TOKEN_CHAR ||
+                t.getType() == TOKEN_VOID) {
                 lexer.getNextToken(); 
 
                 Token id = lexer.getNextToken();
                 if (id.getType() != TOKEN_IDENTIFIER)
                     throw std::runtime_error("Se esperaba identificador después del tipo");
 
-                Token assign = lexer.getNextToken();
-                if (assign.getType() != TOKEN_ASSIGN)
-                    throw std::runtime_error("Se esperaba '=' en declaración");
+                Token next = lexer.peekNextToken();
+                if (next.getType() == TOKEN_ASSIGN) {
+                    lexer.getNextToken();
 
-                Token value = lexer.getNextToken();
-                double val = 0;
-                if (value.getType() == TOKEN_INTEGER || value.getType() == TOKEN_FLOAT_NUM) {
-                    val = std::stod(value.getLexeme());
-                } else {
-                    throw std::runtime_error("Valor inválido en declaración: " + value.getLexeme());
+                    Token value = lexer.getNextToken();
+                    if (value.getType() != TOKEN_INTEGER &&
+                        value.getType() != TOKEN_FLOAT_NUM &&
+                        value.getType() != TOKEN_IDENTIFIER) {
+                        throw std::runtime_error("Valor inválido en declaración: " + value.getLexeme());
+                    }
                 }
-
-                env.set(id.getLexeme(), val);
+                else if (next.getType() != TOKEN_SEMICOLON) {
+                    throw std::runtime_error("Se esperaba '=' o ';' en declaración");
+                }
 
                 Token semi = lexer.getNextToken();
                 if (semi.getType() != TOKEN_SEMICOLON)
@@ -54,14 +61,11 @@ public:
                     throw std::runtime_error("Se esperaba '=' en asignación");
 
                 Token value = lexer.getNextToken();
-                double val = 0;
-                if (value.getType() == TOKEN_INTEGER || value.getType() == TOKEN_FLOAT_NUM) {
-                    val = std::stod(value.getLexeme());
-                } else {
+                if (value.getType() != TOKEN_INTEGER &&
+                    value.getType() != TOKEN_FLOAT_NUM &&
+                    value.getType() != TOKEN_IDENTIFIER) {
                     throw std::runtime_error("Valor inválido en asignación: " + value.getLexeme());
                 }
-
-                env.set(id.getLexeme(), val);
 
                 Token semi = lexer.getNextToken();
                 if (semi.getType() != TOKEN_SEMICOLON)

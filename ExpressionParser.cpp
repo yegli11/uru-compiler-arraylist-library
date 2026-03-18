@@ -14,12 +14,17 @@
 
 int main() {
 
-std::string code = "int a; int b = 3; int c = 10; int d = 1; (a + b) * (c - d) / d";
+std::string code = "(3 + 3) * (10 - 1) / 1";
     try {
         Lexer lexer(code);
         Environment env;
         ProgramParser progParser(lexer);
-        ASTNode* tree = progParser.parse(env);
+        ASTNode* tree = progParser.parse();
+
+        if (!tree) {
+            std::cout << "No se encontró una expresión para parsear." << std::endl;
+            return 1;
+        }
 
         std::cout << "===== AST GENERADO =====\n";
         tree->print();

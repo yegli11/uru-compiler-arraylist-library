@@ -617,7 +617,13 @@ private:
                 if (oss.tellp() > 0) {
                     oss << " ";
                 }
-                oss << lookaheadLexeme();
+                if (type == TOKEN_STRING) {
+                    oss << '"' << lookaheadLexeme() << '"';
+                } else if (type == TOKEN_CHAR_LITERAL) {
+                    oss << '\'' << lookaheadLexeme() << '\'';
+                } else {
+                    oss << lookaheadLexeme();
+                }
             }
             shift(stateStack.top());
         }
