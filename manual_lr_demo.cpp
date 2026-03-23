@@ -1,11 +1,14 @@
 #include <iostream>
+#include <fstream>
 #include "Lexer.h"
 #include "ProgramParser.h"
 #include "SemanticAnalyzer.h"
+#include "Transpiler.h"
 
 int main() {
     std::string code =
         "int main() {\n"
+        "  char c = 'a';\n"
         "  int x = 1;\n"
         "  int y = 0;\n"
         "  if (x > 0) {\n"
@@ -45,6 +48,26 @@ int main() {
         }
 
         program->print();
+
+        if (errors.empty() && !hasSemanticErrors) {
+            TypeScriptTranspiler transpiler;
+            std::string tsCode = transpiler.transpile(program);
+
+            std::cout << "\n===== CODIGO TYPESCRIPT TRANSPILADO =====\n";
+            std::cout << tsCode;
+
+            std::ofstream outFile("transpiled_output.ts");
+            if (outFile) {
+                outFile << tsCode;
+                outFile.close();
+                std::cout << "\nArchivo generado: transpiled_output.ts\n";
+            } else {
+                std::cout << "\nNo se pudo escribir transpiled_output.ts\n";
+            }
+        } else {
+            std::cout << "\nTranspilacion omitida por errores sintacticos/semanticos.\n";
+        }
+
         delete program;
         return (errors.empty() && !hasSemanticErrors) ? 0 : 1;
     }
